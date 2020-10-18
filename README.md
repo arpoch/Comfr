@@ -2,9 +2,9 @@
 
 ## Idea
 
-* This project is based on the idea of peer-peer communication and centralized storage.The Users can communicate and transfer Data cross the network without the need of any centralized authority also giving the ability to the user to storage data in a centralized location, accesseble to others.
+* This project is based on the idea of peer-peer communication and centralized storage.The Users can communicate and transfer Data cross the network without any need of centralized authority also giving the ability to the user to store data in a centralized location, accessible to others.
 
-* Another important issue taken in account is portabiliy and ease of installation. The client side will be developed as a web extension thus making it protable cross devices without the need of addition software installation.
+* Another important issue taken in account is portability and ease of installation. The client side will be developed as a web extension thus making it protable across devices without the need of additional software installation.
 
 
 ## Implementation
@@ -12,7 +12,7 @@
 1. **Client Side**
 
    * [*WebRTC*](https://tools.ietf.org/html/rfc7478) is used for establishing peer-peer connection between clients. [*WebSocket Protocol*](https://tools.ietf.org/html/rfc6455) is used for signalling purpose and sending files to and from the server for storage.
-   * The client side will installed as an extension on the browser thus making it compatible with different desktop browsers such as Chrome, Firefox.
+   * The client side will be installed as an extension on the browser thus making it compatible with different desktop browsers such as Chrome, Firefox.
 2. **Server Side**
 
    * For now an Android app is used to fulfil the purpose of a server using [*WebSocket Protocol*](https://tools.ietf.org/html/rfc6455) and as a storage location.
