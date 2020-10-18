@@ -1,4 +1,4 @@
-# Compfr
+# Comfr
 
 ## Idea
 
