@@ -1,0 +1,8 @@
+<resources>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_connect">Connect</string>
+    <string name="app_name">WebSocket Server</string>
+    <string name="display_status">Status</string>
+    <string name="ip_label">IP Address</string>
+    <string name="ip_value"></string>
+</resources>

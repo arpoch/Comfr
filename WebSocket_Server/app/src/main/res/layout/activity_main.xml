@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="148dp"
+        android:layout_height="65dp"
+        android:onClick="sendMessage"
+        android:text="@string/button_connect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/display_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ipAddr"
+        android:layout_width="91dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:capitalize="sentences"
+        android:fontFamily="monospace"
+        android:text="@string/ip_label"
+        android:textColor="#000000"
+        android:textColorHighlight="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="90dp" />
+
+    <TextView
+        android:id="@+id/ip_value"
+        android:layout_width="163dp"
+        android:layout_height="21dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/ip_value"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="90dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
