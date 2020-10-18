@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>REMOTE</title>
+</head>
+
+<body>
+    <button id="connectButton" name="connectButton" class="buttonleft">
+        Connect
+    </button>
+    <button id="disconnectButton" name="disconnectButton" class="buttonright" disabled>
+        Disconnect
+    </button>
+    <div>
+        <h4>Local Offer</h4>
+        <textarea id="offerGet" style="width: 696px; height: 94px;"></textarea>
+    </div>
+    <div>
+        <h4>Remote Answer</h4>
+        <p id="answerSet"></p>
+    </div>
+    <div class="messagebox">
+        <label for="message">Enter a message:
+            <input type="text" name="message" id="message" placeholder="Message text" inputmode="latin" size=60
+                maxlength=120 disabled>
+        </label>
+        <button id="sendButton" name="sendButton" class="buttonright" disabled>
+            Send
+        </button>
+    </div>
+    <div class="messagebox" id="receivebox">
+        <p>Messages received:</p>
+    </div>
+    <script lang="javascript" type="text/javascript">
+        (function () {
+            // Define "global" variables
+            var connectButton = null;
+            var disconnectButton = null;
+            var sendButton = null;
+            var receivebox = null;
+            var messageInputBox = null;
+            var sendButton = null;
+
+            var offerBox = null;
+
+            var dataChannel = null;
+            //StartUP
+            function startup() {
+
+                connectButton = document.getElementById('connectButton');
+                disconnectButton = document.getElementById('disconnectButton');
+                sendButton = document.getElementById('sendButton');
+                messageInputBox = document.getElementById('message');
+                receiveBox = document.getElementById('receivebox');
+
+                connectButton.addEventListener("click", connectPeer, false);
+                disconnectButton.addEventListener("click", disconnetPeer, false);
+                sendButton.addEventListener("click", sendMessage, false);
+            };
+
+            function connectPeer() {
+                //Creating Peer
+                var remoteConnection = new RTCPeerConnection();
+                //Data Channel
+                var dataChannel = remoteConnection.createDataChannel("remoteDataChannel");
+                dataChannel.onopen = UIHandle;
+                dataChannel.onclose = UIHandle;
+
+                remoteConnection.ondatachannel = DataChannelHandle;
+                //
+                var localOfferSDP = document.getElementById("offerGet").value;
+                if (localOfferSDP) {
+                    remoteConnection.setRemoteDescription(localOfferSDP);
+                    DataChannelHandle;
+                }
+            }
+
+            function UIHAndle() {
+                if (dataChannel) {
+                    var state = (dataChannel.readyState);
+                    if (state == "open") {
+                        disconnectButton.disabled = false;
+                        sendButton.disabled = false;
+                        messagebox.disabled = false;
+                        messagebox.focus();
+                    }
+                    else {
+                        connectButton.disabled = false;
+                        disconnectButton.disabled = true;
+                        sendButton.disabled = true;
+                        messageInputBox.disabled = true;
+                    }
+                }
+            }
+            window.addEventListener("load", startup(), false);
+
+        })();
+    </script>

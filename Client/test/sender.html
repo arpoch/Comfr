@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>LOCAL</title>
+</head>
+
+<body>
+    <button id="connectButton" name="connectButton" class="buttonleft">
+        Connect
+    </button>
+    <button id="disconnectButton" name="disconnectButton" class="buttonright" disabled>
+        Disconnect
+    </button>
+    <div>
+        <h4>Local Offer</h4>
+        <p id="offerSet"></p>
+    </div>
+    <div>
+        <h4>Remote Answer</h4>
+        <p id="answerGet"></p>
+    </div>
+    <div class="messagebox">
+        <label for="message">Enter a message:
+            <input type="text" name="message" id="message" placeholder="Message text" inputmode="latin" size=60
+                maxlength=120 disabled>
+        </label>
+        <button id="sendButton" name="sendButton" class="buttonright" disabled>
+            Send
+        </button>
+    </div>
+    <div class="messagebox" id="receivebox">
+        <p>Messages received:</p>
+    </div>
+    <script lang="javascript" type="text/javascript">
+        (function () {
+            // Define "global" variables
+            var connectButton = null;
+            var disconnectButton = null;
+            var sendButton = null;
+            var receivebox = null;
+            var messageInputBox = null;
+            var sendButton = null;
+
+            var localConnection = null;     //Peer Connection
+            var recieveDataChannel = null;  //RTCDataChannel object
+            var sendDataChannel = null;     //RTCDataChannel object
+            var UIHandle = null;
+
+            var answerBox = null;
+            var openConSoc = false;
+            var wss = null;
+            //StartUP
+            function startup() {
+
+                connectButton = document.getElementById('connectButton');
+                disconnectButton = document.getElementById('disconnectButton');
+                sendButton = document.getElementById('sendButton');
+                messageInputBox = document.getElementById('message');
+                receiveBox = document.getElementById('receivebox');
+
+                connectButton.addEventListener("click", connectPeer, false);
+                disconnectButton.addEventListener("click", disconnetPeer, false);
+                sendButton.addEventListener("click", sendMessage, false);
+            };
+
+            //ConnetPeers
+            function connectPeer() {
+                /////Start new Peer (Step_1)
+                localConnection = new RTCPeerConnection();
+                wss = new WebSocket('ws://192.168.1.100:8080');
+                console.log("Ready\n");
+
+                /////Creating Data Channel
+                //(Step_2)
+                sendDataChannel = localConnection.createDataChannel("sendDataChannel", { ordered: true }); //Data channel for the local connenction
+                sendDataChannel.onopen = UIHandle;
+                sendDataChannel.onclose = UIHandle;
+
+                console.log("Waiting for Connection to the Server...\n");
+                /////Offer(SDP)
+                //(Step_3)
+                wss.onopen = function () {
+                    console.log("Creating Offer (SDP)\n");
+                    localConnection.createOffer().then((offer) => { //if offer is created '.then'=When the createOffer promise is succesfull , it will return SDP which it stored in 'offer'
+                        //document.getElementById('offerSet').innerHTML = offer.sdp;
+                        localConnection.setLocalDescription(offer);
+                        //wss.send(JSON.stringify({ 'offer': offer }));
+                    }).catch(handleCreateDescriptionError) // if offer not created successfully
+
+                    function handleCreateDescriptionError(error) {
+                        console.log("Unable to create an offer: " + error.toString());
+                    }
+
+                    ///// CANDIDATE
+                    //(Step_4)
+                    localConnection.onicecandidate = function (event) {
+                        if (event.candidate != null) {
+                            var toServer = {
+                                hello: "Hi",
+                                bye: 5
+                            };
+                            //console.log(JSON.stringify(event.candidate));
+                            var blob = new Blob([JSON.stringify(event.candidate)],
+                                { type: 'text/plain', endings: 'native' });
+                            wss.send(blob);
+                            //var txtNode = document.createTextNode(event.candidate);
+
+                            console.log(event.candidate);
+                        } else {
+                            var g = localConnection.readyState;
+                            console.log(g);
+                            console.log("All ICE Candidate have been send\n");
+                        }
+                    }
+                }
+                wss.onclose = function (event) {
+                    var g = localConnection.readyState;
+                    console.log(g);
+                    localConnection.close();
+                    if (localConnection.readyState == 2)
+                        console.log("Connection Closing...\n");
+                    else if (localConnection.readyState == 3) {
+                        console.log(localConnection.iceConnectionState + "hre");
+                    }
+                    console.log(localConnection.readyState);
+
+                }
+                /////ONDATACHANNLE
+                localConnection.ondatachannel = dataChannelHanndel //This is trigger when datachannel is opened and established on form both sides and the remote connection is recieved here.
+                function dataChannelHanndel(event) {    //This event occurs one the RTCDataChannel is opened i.e. data channel's underlying data transport—the link over which the RTCDataChannel's messages flow—is established or re-established.
+                    recieveDataChannel = event.channel;  //It set to the value of the "event's" channel property, which specifies the RTCDataChannel object representing the data channel linking the remote peer to the local one.
+                    recieveDataChannel.onmessage = handleReceiveMessage;  //linking the remote peer to the local one.
+                    receiveChannel.onopen = handleReceiveChannelStatusChange;
+                    receiveChannel.onclose = handleReceiveChannelStatusChange;
+                }
+            }
+
+            //Recieve message
+            function handleReceiveMessage(event) {
+                var el = document.createElement("p");
+                var txtNode = document.createTextNode(event.data);
+
+                el.appendChild(txtNode);
+                receiveBox.appendChild(el);
+            }
+            // Handle status changes on the receiver's channel.
+            function handleReceiveChannelStatusChange(event) {
+                if (receiveChannel) {
+                    console.log("Receive channel's status has changed to " +
+                        receiveChannel.readyState);
+                }
+            }
+
+            //UI;
+            function UIHandle() {
+                if (dataChannel) {
+                    var state = dataChannel.readyState;
+                    if (state == "open") {
+                        disconnectButton.disabled = false;
+                        sendButton.disabled = false;
+                        messagebox.disabled = false;
+                        messagebox.focus();
+                    }
+                    else {
+                        connectButton.disabled = false;
+                        disconnectButton.disabled = true;
+                        sendButton.disabled = true;
+                        messageInputBox.disabled = true;
+                    }
+                }
+
+            };
+            window.addEventListener("load", startup(), false);
+        })();
+
+    </script>
