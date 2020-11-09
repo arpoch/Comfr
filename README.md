@@ -37,4 +37,4 @@
 
 ## What's Next
 
-Since the WebRTC iadd real-time communication capabilities to the application thus diiferent use cases can be made such as screen-sharing, video-calling, chat-messages and much more.
+Since the WebRTC provides real-time communication capabilities to the application thus different use cases can be made such as screen-sharing, video-calling, chat-messages and much more.
